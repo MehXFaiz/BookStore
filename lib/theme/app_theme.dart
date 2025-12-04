@@ -6,13 +6,13 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.background,
-      primaryColor: AppColors.primaryDark,
+      scaffoldBackgroundColor: AppColors.primaryDark,
+      primaryColor: AppColors.primaryLight,
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.primaryDark,
+        primary: AppColors.primaryLight,
         secondary: AppColors.accentGreen,
         surface: AppColors.cardBackground,
-        background: AppColors.background,
+        background: AppColors.primaryDark,
       ),
       textTheme: GoogleFonts.poppinsTextTheme(
         const TextTheme(
@@ -44,7 +44,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accentGreen,
-          foregroundColor: AppColors.background,
+          foregroundColor: AppColors.primaryDark,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
