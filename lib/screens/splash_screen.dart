@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../theme/app_colors.dart';
-import '../widgets/book_illustration.dart';
 import 'auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -59,32 +58,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // App name
-                Text(
-                  'Greenbolt',
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                    color: AppColors.accentGreen,
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Tagline
-                Text(
-                  'Keep Reading you\nwill fall in love',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textWhite,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 60),
-                
-                // Book illustration
-                const BookIllustration(
-                  size: 200,
-                  color: AppColors.textWhite,
+                // Splash image
+                Image.asset(
+                  'assets/splash.png',
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  fit: BoxFit.contain,
                 ),
               ],
             ),
