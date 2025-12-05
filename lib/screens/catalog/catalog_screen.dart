@@ -10,182 +10,184 @@ class CatalogScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     // Group books by genre for the catalog
     final allBooks = [...trendingBooks, ...newArrivals];
     final booksByGenre = <String, List<Book>>{};
-    
+
     for (var book in allBooks) {
       if (!booksByGenre.containsKey(book.genre)) {
         booksByGenre[book.genre] = [];
       }
       booksByGenre[book.genre]!.add(book);
     }
-    
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.primaryGradient,
+
+    final genres = booksByGenre.keys.toList();
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryMid.withOpacity(0.5),
+              shape: BoxShape.circle,
+            ),
+             child: const Icon(Icons.arrow_back_ios_new, color: AppColors.textWhite, size: 18),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Catalog',
+          style: GoogleFonts.poppins(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Container(
+               padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primaryMid.withOpacity(0.5),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.search, color: AppColors.textWhite, size: 20)),
+            onPressed: () {
+               // Add search functionality or navigate to search
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            // Custom AppBar for Catalog
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                   Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryLight,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.arrow_back_ios_new, color: AppColors.textWhite, size: 20),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.primaryGradient,
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: DefaultTabController(
+            length: genres.length + 1, // +1 for "All"
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Explore Books',
+                            style: GoogleFonts.poppins(
+                              color: AppColors.textWhite,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              height: 1.2,
+                            ),
+                          ),
+                          Text(
+                            'Find your next favorite read',
+                            style: GoogleFonts.poppins(
+                              color: AppColors.textLightGreen,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
                   ),
-                  Text(
-                    'Book Catalog',
-                    style: GoogleFonts.poppins(
-                      color: AppColors.textWhite,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  SliverPersistentHeader(
+                    delegate: _SliverAppBarDelegate(
+                      TabBar(
+                        isScrollable: true,
+                        labelColor: AppColors.primaryDark,
+                        unselectedLabelColor: AppColors.textLightGreen,
+                        labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                        unselectedLabelStyle: GoogleFonts.poppins(),
+                        indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: AppColors.accentGreen,
+                        ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 24),
+                        tabs: [
+                          const Tab(text: 'All'),
+                          ...genres.map((genre) => Tab(text: genre)),
+                        ],
+                      ),
                     ),
+                    pinned: true,
                   ),
-                ],
-              ),
-            ),
-            
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                ];
+              },
+              body: TabBarView(
                 children: [
-                  
-                  // Best Sellers Section (using trendingBooks as proxy)
-                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _buildSectionHeader('Best Sellers'),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 280,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: trendingBooks.length,
-                      itemBuilder: (context, index) {
-                         return BookCard(
-                            book: trendingBooks[index],
-                            onTap: () => _navigateToDetail(context, trendingBooks[index]),
-                          );
-                      },
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 30),
-                  
-                  // New Arrivals Section
-                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _buildSectionHeader('New Arrivals'),
-                  ),
-                  const SizedBox(height: 16),
-                   SizedBox(
-                    height: 280,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: newArrivals.length,
-                      itemBuilder: (context, index) {
-                         return BookCard(
-                            book: newArrivals[index],
-                            onTap: () => _navigateToDetail(context, newArrivals[index]),
-                          );
-                      },
-                    ),
-                  ),
-                  
-                   const SizedBox(height: 30),
-                   
-                   // Browse by Category Section
-                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _buildSectionHeader('Browse by Genre'),
-                  ),
-                  
-                  // Generates a list of genres with books
-                  ...booksByGenre.entries.map((entry) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Text(
-                             entry.key,
-                             style: GoogleFonts.poppins(
-                               color: AppColors.accentGreen,
-                               fontSize: 16,
-                               fontWeight: FontWeight.w600,
-                             ),
-                           ),
-                        ),
-                        const SizedBox(height: 12),
-                         SizedBox(
-                          height: 280,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: entry.value.length,
-                            itemBuilder: (context, index) {
-                               return BookCard(
-                                  book: entry.value[index],
-                                  onTap: () => _navigateToDetail(context, entry.value[index]),
-                                );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                  
-                   const SizedBox(height: 100), // Bottom padding
+                  // "All" Tab
+                  _buildBookGrid(context, allBooks),
+                  // Genre Tabs
+                  ...genres.map((genre) => _buildBookGrid(context, booksByGenre[genre]!)),
                 ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-  
-  void _navigateToDetail(BuildContext context, Book book) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BookDetailScreen(book: book),
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: GoogleFonts.poppins(
-            color: AppColors.textWhite,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Icon(Icons.arrow_forward, color: AppColors.textLightGreen),
-      ],
+  Widget _buildBookGrid(BuildContext context, List<Book> books) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(24),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.65, // Taller cards
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 24,
+      ),
+      itemCount: books.length,
+      itemBuilder: (context, index) {
+        return BookCard(
+          book: books[index],
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => BookDetailScreen(book: books[index]),
+              ),
+            );
+          },
+        );
+      },
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar _tabBar;
+
+  _SliverAppBarDelegate(this._tabBar);
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height + 16;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height + 16;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: AppColors.primaryDark, // Background for sticky header
+      child: Center(child: _tabBar),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }
