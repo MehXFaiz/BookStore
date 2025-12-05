@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/book_illustration.dart';
-import '../home/home_screen.dart';
+import '../main_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // Navigate to home screen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => const HomeScreen(isGuest: false),
+          builder: (_) => const MainScreen(isGuest: false),
         ),
       );
     }
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // Navigate to home screen in guest mode
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (_) => const HomeScreen(isGuest: true),
+        builder: (_) => const MainScreen(isGuest: true),
       ),
     );
   }
