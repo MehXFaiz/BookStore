@@ -5,6 +5,7 @@ import 'home/home_screen.dart';
 import 'search/search_screen.dart';
 import 'library/library_screen.dart';
 import 'profile/profile_screen.dart';
+import 'wishlist/wishlist_screen.dart';
 import '../widgets/custom_drawer.dart';
 
 class MainScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onProfileTap() {
     setState(() {
-      _currentIndex = 3; // Profile tab index
+      _currentIndex = 4; // Profile tab index
     });
   }
 
@@ -56,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
         onProfileTap: _onProfileTap, // Navigate to Profile tab
       ),
       const SearchScreen(),
+      const WishlistScreen(showBackButton: false),
       const LibraryScreen(),
       const ProfileScreen(),
     ];
@@ -110,6 +112,11 @@ class _MainScreenState extends State<MainScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.search),
                 label: 'Search',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite_border),
+                activeIcon: Icon(Icons.favorite),
+                label: 'Wishlist',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.bookmark_outline),

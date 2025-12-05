@@ -43,8 +43,30 @@ class BookDetailScreen extends StatelessWidget {
                   wishlist.toggleWishlist(book.id);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(isWishlisted ? 'Removed from Wishlist' : 'Added to Wishlist'),
-                      duration: const Duration(milliseconds: 600),
+                      content: Row(
+                        children: [
+                          Icon(
+                            isWishlisted ? Icons.favorite_border : Icons.favorite,
+                            color: AppColors.primaryDark,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            isWishlisted ? 'Removed from Wishlist' : 'Added to Wishlist',
+                            style: GoogleFonts.poppins(
+                              color: AppColors.primaryDark,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      backgroundColor: AppColors.accentGreen,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      margin: const EdgeInsets.all(20),
+                      duration: const Duration(milliseconds: 1000),
+                      elevation: 5,
                     ),
                   );
                 },
@@ -241,28 +263,49 @@ class BookDetailScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Container(
-        color: AppColors.primaryMid.withOpacity(0.9), // Match theme or transparent
-        padding: const EdgeInsets.all(24),
+      extendBody: true,
+      bottomNavigationBar: Container(
+        height: 90,
+        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient: const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              AppColors.primaryMid,
+              AppColors.primaryLight,
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Price',
                   style: GoogleFonts.poppins(
                     color: AppColors.textLightGreen,
-                    fontSize: 12,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   book.price,
                   style: GoogleFonts.poppins(
                     color: AppColors.textWhite,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -272,21 +315,47 @@ class BookDetailScreen extends StatelessWidget {
               onPressed: () {
                 Provider.of<CartProvider>(context, listen: false).addToCart(book);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Added to Cart!'),
-                    duration: Duration(seconds: 1),
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.check_circle, color: AppColors.primaryDark),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Added to Cart!',
+                          style: GoogleFonts.poppins(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    backgroundColor: AppColors.accentGreen,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    margin: const EdgeInsets.all(20),
+                    duration: const Duration(milliseconds: 1500),
+                    elevation: 5,
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accentGreen,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                foregroundColor: AppColors.primaryDark,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Add to Cart',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
-              child: const Text('Add to Cart'),
             ),
           ],
         ),

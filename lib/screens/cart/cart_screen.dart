@@ -142,56 +142,93 @@ class CartScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryDark,
-                      border: Border(top: BorderSide(color: AppColors.primaryLight.withOpacity(0.5))),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Total:',
-                              style: GoogleFonts.poppins(
-                                color: AppColors.textWhite,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              '\$${cart.totalAmount.toStringAsFixed(2)}',
-                              style: GoogleFonts.poppins(
-                                color: AppColors.accentGreen,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const CheckoutScreen()),
-                              );
-                            },
-                            child: const Text('Checkout'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               );
             },
           ),
         ),
       ),
+      extendBody: true,
+      bottomNavigationBar: Consumer<CartProvider>(
+        builder: (context, cart, child) {
+          if (cart.items.isEmpty) return const SizedBox.shrink();
+          
+          return Container(
+            height: 90,
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  AppColors.primaryMid,
+                  AppColors.primaryLight,
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.textLightGreen,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '\$${cart.totalAmount.toStringAsFixed(2)}',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.textWhite,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const CheckoutScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accentGreen,
+                    foregroundColor: AppColors.primaryDark,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    'Checkout',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+
     );
   }
 }

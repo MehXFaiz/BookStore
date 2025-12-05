@@ -7,7 +7,9 @@ import '../../widgets/book_card.dart';
 import '../home/book_detail_screen.dart';
 
 class WishlistScreen extends StatelessWidget {
-  const WishlistScreen({super.key});
+  final bool showBackButton;
+
+  const WishlistScreen({super.key, this.showBackButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +18,12 @@ class WishlistScreen extends StatelessWidget {
         title: Text('My Wishlist', style: GoogleFonts.poppins(color: AppColors.textWhite)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textWhite, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: showBackButton 
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textWhite, size: 20),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
       ),
       extendBodyBehindAppBar: true,
       body: Container(
