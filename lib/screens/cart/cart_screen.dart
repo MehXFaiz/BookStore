@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../theme/app_colors.dart';
+import '../../screens/checkout/checkout_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -175,8 +176,8 @@ class CartScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Checkout feature coming soon!')),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => const CheckoutScreen()),
                               );
                             },
                             child: const Text('Checkout'),

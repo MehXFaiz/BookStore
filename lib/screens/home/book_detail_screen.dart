@@ -4,6 +4,7 @@ import '../../models/book.dart';
 import 'package:provider/provider.dart';
 import '../../theme/app_colors.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/wishlist_provider.dart';
 import '../../widgets/review_list/review_list.dart';
 
 class BookDetailScreen extends StatelessWidget {
@@ -29,6 +30,29 @@ class BookDetailScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          Consumer<WishlistProvider>(
+            builder: (context, wishlist, child) {
+              final isWishlisted = wishlist.isInWishlist(book.id);
+              return IconButton(
+                icon: Icon(
+                  isWishlisted ? Icons.favorite : Icons.favorite_border,
+                  color: isWishlisted ? Colors.red : AppColors.textWhite,
+                ),
+                onPressed: () {
+                  wishlist.toggleWishlist(book.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(isWishlisted ? 'Removed from Wishlist' : 'Added to Wishlist'),
+                      duration: const Duration(milliseconds: 600),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Container(
         decoration: const BoxDecoration(

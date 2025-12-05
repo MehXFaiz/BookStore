@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../screens/catalog/catalog_screen.dart';
+import '../screens/wishlist/wishlist_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -56,7 +57,12 @@ class CustomDrawer extends StatelessWidget {
                 );
               }),
               _buildDrawerItem(Icons.bookmark_outline, 'My Library', () {}), // Could link to Library tab
-              _buildDrawerItem(Icons.favorite_border, 'Wishlist', () {}),
+              _buildDrawerItem(Icons.favorite_border, 'Wishlist', () {
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const WishlistScreen()),
+                );
+              }),
               _buildDrawerItem(Icons.settings_outlined, 'Settings', () {}),
               const Spacer(),
               const Divider(color: AppColors.primaryLight),

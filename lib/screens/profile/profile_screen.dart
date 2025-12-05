@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_colors.dart';
 import 'edit/edit_profile_screen.dart';
+import '../orders/order_history_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -65,6 +66,11 @@ class ProfileScreen extends StatelessWidget {
               _buildMenuItem(Icons.person_outline, 'Edit Profile', onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                );
+              }),
+              _buildMenuItem(Icons.shopping_bag_outlined, 'My Orders', onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
                 );
               }),
               _buildMenuItem(Icons.notifications_outlined, 'Notifications'),
