@@ -20,6 +20,34 @@ class Book {
     this.reviewCount = 0,
     required this.genre,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'author': author,
+      'coverImage': coverImage,
+      'rating': rating,
+      'description': description,
+      'price': price,
+      'reviewCount': reviewCount,
+      'genre': genre,
+    };
+  }
+
+  factory Book.fromMap(Map<String, dynamic> map, String docId) {
+    return Book(
+      id: docId,
+      title: map['title'] ?? '',
+      author: map['author'] ?? '',
+      coverImage: map['coverImage'] ?? 'assets/book_covers/book1.png',
+      rating: (map['rating'] ?? 0.0).toDouble(),
+      description: map['description'] ?? '',
+      price: map['price'] ?? '\$0.00',
+      reviewCount: map['reviewCount'] ?? 0,
+      genre: map['genre'] ?? 'Fiction',
+    );
+  }
 }
 
 // Sample data for trending books

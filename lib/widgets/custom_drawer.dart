@@ -6,6 +6,7 @@ import '../providers/auth_provider.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/catalog/catalog_screen.dart';
 import '../screens/wishlist/wishlist_screen.dart';
+import '../screens/admin/admin_panel_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -37,7 +38,7 @@ class CustomDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      user?.email?.split('@').first ?? 'Guest User',
+                      authProvider.name ?? user?.email?.split('@').first ?? 'Guest User',
                       style: GoogleFonts.poppins(
                         color: AppColors.textWhite,
                         fontSize: 20,
@@ -95,7 +96,10 @@ class CustomDrawer extends StatelessWidget {
               if (authProvider.isAdmin) ...[
                 const Divider(color: AppColors.primaryLight),
                 _buildDrawerItem(Icons.admin_panel_settings_outlined, 'Admin Panel', () {
-                  // Admin specific logic
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const AdminPanelScreen()),
+                  );
                 }),
               ],
               const Spacer(),

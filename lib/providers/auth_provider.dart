@@ -5,10 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AuthProvider with ChangeNotifier {
   User? _user;
   String? _role;
+  String? _name;
   bool _isLoading = false;
 
   User? get user => _user;
   String? get role => _role;
+  String? get name => _name;
   bool get isLoading => _isLoading;
   bool get isAdmin => _role == 'admin';
 
@@ -38,7 +40,9 @@ class AuthProvider with ChangeNotifier {
           .get();
           
       if (doc.exists) {
-        _role = doc.data()?['role'] ?? 'user';
+        final data = doc.data();
+        _role = data?['role'] ?? 'user';
+        _name = data?['name'];
       } else {
         _role = 'user';
       }
@@ -52,6 +56,7 @@ class AuthProvider with ChangeNotifier {
     await FirebaseAuth.instance.signOut();
     _user = null;
     _role = null;
+    _name = null;
     notifyListeners();
   }
 }

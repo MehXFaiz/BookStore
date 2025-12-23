@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../../theme/app_colors.dart';
+import '../../providers/auth_provider.dart';
+import '../auth/login_screen.dart';
 import 'edit/edit_profile_screen.dart';
 import '../orders/order_history_screen.dart';
 
@@ -9,6 +12,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
+
     return Container(
       decoration: const BoxDecoration(
         gradient: AppColors.primaryGradient,
@@ -27,7 +33,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'John Den.',
+                authProvider.name ?? user?.email?.split('@').first ?? 'Guest User',
                 style: GoogleFonts.poppins(
                   color: AppColors.textWhite,
                   fontSize: 24,
@@ -35,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'john.doe@example.com',
+                user?.email ?? 'Not logged in',
                 style: GoogleFonts.poppins(
                   color: AppColors.textLightGreen,
                   fontSize: 14,
@@ -76,7 +82,20 @@ class ProfileScreen extends StatelessWidget {
               _buildMenuItem(Icons.notifications_outlined, 'Notifications'),
               _buildMenuItem(Icons.security_outlined, 'Privacy & Security'),
               _buildMenuItem(Icons.help_outline, 'Help & Support'),
-              _buildMenuItem(Icons.logout, 'Logout', isDestructive: true),
+              _buildMenuItem(
+                Icons.logout,
+                'Logout',
+                isDestructive: true,
+                onTap: () async {
+                  await authProvider.signOut();
+                  if (context.mounted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),

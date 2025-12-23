@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, auth, _) {
                       String displayName = 'Guest';
                       if (!widget.isGuest && auth.user != null) {
-                        displayName = auth.user?.email?.split('@').first ?? 'User';
+                        displayName = auth.name ?? auth.user?.email?.split('@').first ?? 'User';
                       }
                       return Text(
                         'Hello, $displayName!',
