@@ -4,9 +4,10 @@ import '../../models/book.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/book_card.dart';
 import 'package:provider/provider.dart';
-import '../../providers/cart_provider.dart';
 import '../cart/cart_screen.dart';
 import 'book_detail_screen.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/cart_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isGuest;
@@ -123,13 +124,21 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.isGuest ? 'Hello, Guest!' : 'Hello, John Den.!',
-                    style: GoogleFonts.poppins(
-                      color: AppColors.textWhite,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Consumer<AuthProvider>(
+                    builder: (context, auth, _) {
+                      String displayName = 'Guest';
+                      if (!widget.isGuest && auth.user != null) {
+                        displayName = auth.user?.email?.split('@').first ?? 'User';
+                      }
+                      return Text(
+                        'Hello, $displayName!',
+                        style: GoogleFonts.poppins(
+                          color: AppColors.textWhite,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 20),
                   TextField(

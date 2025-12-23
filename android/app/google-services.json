@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584437948780",
+    "project_id": "bookstore-fbf84",
+    "storage_bucket": "bookstore-fbf84.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584437948780:android:8068b65655e25bcdd81349",
+        "android_client_info": {
+          "package_name": "com.example.bookdukan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDQ3yQtiDrAiDifSIzTAUKBoRFmj4br9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

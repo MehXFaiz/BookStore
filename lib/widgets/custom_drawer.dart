@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../providers/auth_provider.dart';
+import '../screens/auth/login_screen.dart';
 import '../screens/catalog/catalog_screen.dart';
 import '../screens/wishlist/wishlist_screen.dart';
 
@@ -9,6 +12,10 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
+    final role = authProvider.role;
+
     return Drawer(
       child: Container(
         decoration: const BoxDecoration(
@@ -30,15 +37,36 @@ class CustomDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'John Den.',
+                      user?.email?.split('@').first ?? 'Guest User',
                       style: GoogleFonts.poppins(
                         color: AppColors.textWhite,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    if (role != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: role == 'admin' ? Colors.red.withOpacity(0.2) : AppColors.accentGreen.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: role == 'admin' ? Colors.red : AppColors.accentGreen,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          role.toUpperCase(),
+                          style: GoogleFonts.poppins(
+                            color: role == 'admin' ? Colors.red : AppColors.accentGreen,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 4),
                     Text(
-                      'john.doe@example.com',
+                      user?.email ?? 'Not logged in',
                       style: GoogleFonts.poppins(
                         color: AppColors.textLightGreen,
                         fontSize: 12,
@@ -64,9 +92,23 @@ class CustomDrawer extends StatelessWidget {
                 );
               }),
               _buildDrawerItem(Icons.settings_outlined, 'Settings', () {}),
+              if (authProvider.isAdmin) ...[
+                const Divider(color: AppColors.primaryLight),
+                _buildDrawerItem(Icons.admin_panel_settings_outlined, 'Admin Panel', () {
+                  // Admin specific logic
+                }),
+              ],
               const Spacer(),
               const Divider(color: AppColors.primaryLight),
-              _buildDrawerItem(Icons.logout, 'Logout', () {}, isDestructive: true),
+              _buildDrawerItem(Icons.logout, 'Logout', () async {
+                await authProvider.signOut();
+                if (context.mounted) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
+                  );
+                }
+              }, isDestructive: true),
               const SizedBox(height: 20),
             ],
           ),
