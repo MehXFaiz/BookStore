@@ -149,7 +149,9 @@ class CatalogScreen extends StatelessWidget {
         ),
       ),
     );
-  }
+  },
+);
+}
 
   Widget _buildBookGrid(BuildContext context, List<Book> books) {
     return GridView.builder(

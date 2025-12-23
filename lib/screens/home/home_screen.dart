@@ -8,6 +8,7 @@ import '../cart/cart_screen.dart';
 import 'book_detail_screen.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isGuest;
@@ -225,19 +226,40 @@ class _HomeScreenState extends State<HomeScreen> {
             
             // Books Grid/List
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7, // Adjust based on Card design
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: trendingBooks.length,
-                itemBuilder: (context, index) {
-                  return BookCard(
-                    book: trendingBooks[index],
-                    onTap: () => _navigateToDetail(context, trendingBooks[index]),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('books').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) return const Center(child: Text('Error loading books'));
+                  if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+
+                  final books = snapshot.data!.docs
+                      .map((doc) => Book.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+                      .toList();
+
+                  if (books.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No books found.',
+                        style: GoogleFonts.poppins(color: AppColors.textLightGreen),
+                      ),
+                    );
+                  }
+
+                  return GridView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.7,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: books.length,
+                    itemBuilder: (context, index) {
+                      return BookCard(
+                        book: books[index],
+                        onTap: () => _navigateToDetail(context, books[index]),
+                      );
+                    },
                   );
                 },
               ),
