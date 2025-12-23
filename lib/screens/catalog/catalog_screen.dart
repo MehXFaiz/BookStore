@@ -5,27 +5,36 @@ import '../../models/book.dart';
 import '../../widgets/book_card.dart';
 import '../home/book_detail_screen.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CatalogScreen extends StatelessWidget {
   const CatalogScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Group books by genre for the catalog
-    final allBooks = [...trendingBooks, ...newArrivals];
-    final booksByGenre = <String, List<Book>>{};
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('books').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return const Center(child: Text('Error loading books'));
+        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
 
-    for (var book in allBooks) {
-      if (!booksByGenre.containsKey(book.genre)) {
-        booksByGenre[book.genre] = [];
-      }
-      booksByGenre[book.genre]!.add(book);
-    }
+        final allBooks = snapshot.data!.docs
+            .map((doc) => Book.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+            .toList();
 
-    final genres = booksByGenre.keys.toList();
+        final booksByGenre = <String, List<Book>>{};
+        for (var book in allBooks) {
+          if (!booksByGenre.containsKey(book.genre)) {
+            booksByGenre[book.genre] = [];
+          }
+          booksByGenre[book.genre]!.add(book);
+        }
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
+        final genres = booksByGenre.keys.toList();
+
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
